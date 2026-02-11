@@ -1,10 +1,14 @@
 import React from 'react';
 import ParameterCard from './ParameterCard';
 import RecommendationsPanel from './RecommendationsPanel';
-import { Activity, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Activity, CheckCircle, AlertTriangle, ArrowRight, Printer } from 'lucide-react';
 
 const ResultsDashboard = ({ results, onReset }) => {
     const { health_score, summary, parameters, recommendations, filename } = results;
+
+    const handlePrint = () => {
+        window.print();
+    };
 
     const getScoreColor = (score) => {
         if (score >= 80) return 'text-green-600';
@@ -80,7 +84,16 @@ const ResultsDashboard = ({ results, onReset }) => {
             <div>
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-bold text-gray-900">Detailed Analysis</h2>
-                    <div className="text-sm text-gray-500">File: {filename}</div>
+                    <div className="flex gap-4 items-center">
+                        <div className="text-sm text-gray-500">File: {filename}</div>
+                        <button
+                            onClick={handlePrint}
+                            className="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors print:hidden"
+                            title="Print Report"
+                        >
+                            <Printer className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

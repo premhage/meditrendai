@@ -10,7 +10,7 @@ patterns = {
         'category': 'Diabetes'
     },
     'Glucose Fasting': {
-        'regex': r'(?:Glucose\s*[-\s]*Fasting|Fasting Blood Sugar|FBS)[\s:]*(\d+)',
+        'regex': r'(?:Glucose\s*[-\s]*Fasting|Fasting Blood Sugar|FBS).*?[\s:]+(\d+)',
         'unit': 'mg/dL',
         'range': (70, 100),
         'category': 'Diabetes'
@@ -84,13 +84,13 @@ patterns = {
     },
     # Liver Function
     'AST (SGOT)': {
-        'regex': r'(?:Aspartate Aminotransferase|AST|SGOT)[\s:]*(\d+)',
+        'regex': r'(?:Aspartate Aminotransferase|AST|SGOT).*?[\s:]+(\d+)',
         'unit': 'U/L',
         'range': (10, 40),
         'category': 'Liver Function'
     },
     'ALT (SGPT)': {
-        'regex': r'(?:Alanine Aminotransferase|ALT|SGPT)[\s:]*(\d+)',
+        'regex': r'(?:Alanine Aminotransferase|ALT|SGPT).*?[\s:]+(\d+)',
         'unit': 'U/L',
         'range': (7, 56),
         'category': 'Liver Function'

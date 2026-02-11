@@ -1,27 +1,37 @@
 import React, { useState } from 'react';
 import UploadReport from './components/UploadReport';
 import ResultsDashboard from './components/ResultsDashboard';
+import TrendAnalysis from './components/TrendAnalysis';
 import { Activity } from 'lucide-react';
 
 function App() {
   const [results, setResults] = useState(null);
+  const [trendData, setTrendData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleUploadSuccess = (data) => {
     setResults(data);
+    setTrendData(null);
+    setError(null);
+  };
+
+  const handleTrendAnalysisSuccess = (data) => {
+    setTrendData(data);
+    setResults(null);
     setError(null);
   };
 
   const handleReset = () => {
     setResults(null);
+    setTrendData(null);
     setError(null);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={handleReset}>
             <div className="bg-primary/10 p-2 rounded-lg">
@@ -48,7 +58,7 @@ function App() {
           </div>
         )}
 
-        {!results ? (
+        {!results && !trendData ? (
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -61,20 +71,26 @@ function App() {
             </div>
             <UploadReport
               onUploadSuccess={handleUploadSuccess}
+              onTrendAnalysisSuccess={handleTrendAnalysisSuccess}
               setLoading={setLoading}
               setError={setError}
             />
           </div>
-        ) : (
+        ) : results ? (
           <ResultsDashboard
             results={results}
+            onReset={handleReset}
+          />
+        ) : (
+          <TrendAnalysis
+            analysis={trendData}
             onReset={handleReset}
           />
         )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-400 py-12 mt-auto">
+      <footer className="bg-gray-900 text-gray-400 py-12 mt-auto print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4 text-white">

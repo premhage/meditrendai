@@ -5,3 +5,23 @@
     @apply bg-gray-50 text-gray-900;
   }
 }
+
+@media print {
+
+  header,
+  footer,
+  button {
+    display: none !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body,
+  main {
+    background: white;
+    padding: 0;
+    margin: 0;
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import { Upload, FileText, ImageIcon, X, TrendingUp, Plus } from 'lucide-react';
+import { Upload, FileText, ImageIcon, X, TrendingUp, Plus, CheckCircle, Loader2 } from 'lucide-react';
 
 const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, setError }) => {
     const [dragActive, setDragActive] = useState(false);
@@ -50,7 +50,7 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
         });
 
         if (mode === 'single') {
-            setFiles([validFiles[0]]); // Only keep the first valid file
+            setFiles([validFiles[0]]);
         } else {
             setFiles(prev => [...prev, ...validFiles]);
         }
@@ -87,7 +87,6 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
                     setError("Analysis failed. Please try again.");
                 }
             } else {
-                // Trends Mode
                 endpoint = 'http://localhost:8000/api/analyze-trends';
                 files.forEach(file => {
                     formData.append('files', file);
@@ -114,27 +113,36 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
     };
 
     return (
-        <div className="w-full max-w-xl mx-auto space-y-6">
+        <div className="w-full max-w-xl mx-auto space-y-8 animate-fade-in">
 
             {/* Mode Switcher */}
-            <div className="flex p-1 bg-gray-100 rounded-lg">
+            <div className="flex p-1.5 bg-gray-100 rounded-xl shadow-inner">
                 <button
                     onClick={() => { setMode('single'); setFiles([]); setError(null); }}
-                    className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${mode === 'single' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:text-gray-900'}`}
+                    className={`flex-1 py-3 text-sm font-semibold rounded-lg transition-all duration-300 transform 
+                    ${mode === 'single'
+                            ? 'bg-white shadow-md text-primary scale-[1.02]'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'}`}
                 >
                     Single Report Analysis
                 </button>
                 <button
                     onClick={() => { setMode('trends'); setFiles([]); setError(null); }}
-                    className={`flex-1 py-2 text-sm font-medium rounded-md transition-all flex items-center justify-center gap-2 ${mode === 'trends' ? 'bg-white shadow-sm text-primary' : 'text-gray-500 hover:text-gray-900'}`}
+                    className={`flex-1 py-3 text-sm font-semibold rounded-lg transition-all duration-300 transform flex items-center justify-center gap-2
+                    ${mode === 'trends'
+                            ? 'bg-white shadow-md text-primary scale-[1.02]'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'}`}
                 >
                     <TrendingUp className="w-4 h-4" /> Track Health Trends
                 </button>
             </div>
 
+            {/* Drop Zone */}
             <div
-                className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-200 ease-in-out text-center
-                    ${dragActive ? 'border-primary bg-primary/5' : 'border-gray-300 hover:border-primary/50 hover:bg-gray-50'}
+                className={`relative border-2 border-dashed rounded-2xl p-10 transition-all duration-300 ease-out text-center group cursor-pointer overflow-hidden
+                    ${dragActive
+                        ? 'border-primary bg-primary/5 scale-[1.01] shadow-lg ring-4 ring-primary/10'
+                        : 'border-gray-200 hover:border-primary/50 hover:bg-gray-50 hover:scale-[1.01] hover:shadow-md'}
                     ${files.length > 0 ? 'bg-white border-solid border-gray-200' : ''}
                 `}
                 onDragEnter={handleDrag}
@@ -153,40 +161,45 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
                 />
 
                 {files.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-6 cursor-pointer">
-                        <div className="w-16 h-16 bg-blue-50 text-primary rounded-full flex items-center justify-center mb-4">
-                            <Upload className="w-8 h-8" />
+                    <div className="flex flex-col items-center justify-center py-8">
+                        <div className="w-20 h-20 bg-blue-50 text-primary rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                            <Upload className="w-10 h-10" />
                         </div>
-                        <p className="text-lg font-semibold text-gray-700 mb-1">
-                            {mode === 'single' ? 'Click to upload or drag & drop' : 'Upload multiple reports to compare'}
+                        <p className="text-xl font-bold text-gray-800 mb-2">
+                            {mode === 'single' ? 'Upload Your Report' : 'Upload Reports to Compare'}
                         </p>
-                        <p className="text-sm text-gray-400">
-                            PDF, JPG or PNG (max. 10MB)
+                        <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto leading-relaxed">
+                            Drag & drop your PDF or Image here, or click to browse files
                         </p>
+                        <div className="flex gap-2 text-xs font-medium text-gray-400 uppercase tracking-wide">
+                            <span className="bg-gray-100 px-2 py-1 rounded">PDF</span>
+                            <span className="bg-gray-100 px-2 py-1 rounded">JPG</span>
+                            <span className="bg-gray-100 px-2 py-1 rounded">PNG</span>
+                        </div>
                     </div>
                 ) : (
                     <div className="space-y-3 cursor-default" onClick={(e) => e.stopPropagation()}>
                         {files.map((file, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
-                                <div className="flex items-center gap-3 text-left">
-                                    <div className="p-2 bg-white rounded-md border border-gray-200">
+                            <div key={idx} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm animate-slide-up">
+                                <div className="flex items-center gap-4 text-left">
+                                    <div className="p-3 bg-white rounded-lg border border-gray-100 shadow-sm">
                                         {file.type === 'application/pdf' ? (
-                                            <FileText className="w-5 h-5 text-red-500" />
+                                            <FileText className="w-6 h-6 text-red-500" />
                                         ) : (
-                                            <ImageIcon className="w-5 h-5 text-blue-500" />
+                                            <ImageIcon className="w-6 h-6 text-blue-500" />
                                         )}
                                     </div>
                                     <div className="overflow-hidden">
-                                        <p className="text-sm font-medium text-gray-900 truncate max-w-[200px]">{file.name}</p>
-                                        <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                        <p className="text-sm font-bold text-gray-900 truncate max-w-[200px]">{file.name}</p>
+                                        <p className="text-xs text-gray-500 font-medium">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => removeFile(idx)}
-                                    className="p-1 hover:bg-gray-200 rounded-full transition-colors text-gray-400 hover:text-gray-600"
+                                    className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-400 hover:text-red-500"
                                     disabled={uploading}
                                 >
-                                    <X className="w-4 h-4" />
+                                    <X className="w-5 h-5" />
                                 </button>
                             </div>
                         ))}
@@ -194,48 +207,52 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
                         {mode === 'trends' && (
                             <button
                                 onClick={() => inputRef.current?.click()}
-                                className="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-primary flex items-center justify-center gap-2 text-sm"
+                                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-primary hover:border-primary/50 flex items-center justify-center gap-2 text-sm font-semibold transition-all"
                             >
-                                <Plus className="w-4 h-4" /> Add another report
+                                <Plus className="w-5 h-5" /> Add another report
                             </button>
                         )}
                     </div>
                 )}
             </div>
 
-            <div className="mt-6 flex justify-center">
+            {/* Action Button */}
+            <div className="mt-8 flex flex-col items-center gap-4">
                 <button
                     onClick={handleUpload}
                     disabled={files.length === 0 || uploading || (mode === 'trends' && files.length < 2)}
                     className={`
-                        w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200
+                        w-full py-4 px-8 rounded-xl font-bold text-lg text-white transition-all duration-300 shadow-lg
                         ${files.length === 0 || uploading || (mode === 'trends' && files.length < 2)
-                            ? 'bg-gray-300 cursor-not-allowed'
-                            : 'bg-primary hover:bg-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'}
+                            ? 'bg-gray-300 cursor-not-allowed shadow-none'
+                            : 'bg-gradient-to-r from-primary to-blue-600 hover:to-blue-700 hover:shadow-xl hover:-translate-y-1 active:scale-[0.98] ring-4 ring-primary/20'}
                     `}
                 >
                     {uploading ? (
-                        <div className="flex items-center justify-center gap-2">
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            <span>{mode === 'single' ? 'Checkups in progress...' : 'Analyzing Trends...'}</span>
+                        <div className="flex items-center justify-center gap-3">
+                            <Loader2 className="w-6 h-6 animate-spin" />
+                            <span>Processing Intelligence...</span>
                         </div>
                     ) : (
-                        mode === 'single' ? 'Analyze Report' : 'Compare Reports'
+                        <div className="flex items-center justify-center gap-2">
+                            {mode === 'single' ? 'Analyze Report' : 'Compare Reports'}
+                            {!uploading && <CheckCircle className="w-5 h-5 opacity-50" />}
+                        </div>
                     )}
                 </button>
+
+                {mode === 'trends' && files.length === 1 && (
+                    <p className="text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1 rounded-full animate-pulse-slow">
+                        * Please upload at least 2 reports to analyze trends.
+                    </p>
+                )}
+
+                {uploading && (
+                    <p className="text-center text-sm text-gray-500 flex items-center gap-2 animate-pulse-slow">
+                        <Loader2 className="w-4 h-4 animate-spin" /> AI is analyzing your health data securely...
+                    </p>
+                )}
             </div>
-
-            {mode === 'trends' && files.length === 1 && (
-                <p className="text-center text-xs text-amber-500">
-                    * Please upload at least 2 reports to analyze trends.
-                </p>
-            )}
-
-            {uploading && (
-                <p className="text-center text-xs text-gray-500 mt-4 animate-pulse">
-                    AI is analyzing your reports. This may take up to 30 seconds.
-                </p>
-            )}
         </div>
     );
 };

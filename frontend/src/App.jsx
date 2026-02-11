@@ -135,7 +135,7 @@ function App() {
             <div>
               <h3 className="text-white font-semibold mb-4">Contact</h3>
               <ul className="space-y-2 text-sm">
-                <li>support@meditrend.ai</li>
+                <li>premhage8@gmail.com</li>
                 <li>Team TechSutra</li>
                 <li>Pune, India</li>
               </ul>

@@ -11,15 +11,15 @@ const ResultsDashboard = ({ results, onReset }) => {
     };
 
     const getScoreColor = (score) => {
-        if (score >= 80) return 'text-green-600';
-        if (score >= 60) return 'text-yellow-600';
-        return 'text-red-600';
+        if (score >= 80) return 'text-success';
+        if (score >= 60) return 'text-alert';
+        return 'text-warning';
     };
 
     const getScoreBg = (score) => {
-        if (score >= 80) return 'stroke-green-500';
-        if (score >= 60) return 'stroke-yellow-500';
-        return 'stroke-red-500';
+        if (score >= 80) return 'stroke-success';
+        if (score >= 60) return 'stroke-alert';
+        return 'stroke-warning';
     };
 
     return (
@@ -27,22 +27,23 @@ const ResultsDashboard = ({ results, onReset }) => {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <h1 className="text-3xl font-bold text-text-dark flex items-center gap-3">
                         Health Report Analysis
-                        <span className="text-sm font-medium px-3 py-1 bg-blue-50 text-blue-600 rounded-full border border-blue-100">
+                        <span className="text-sm font-medium px-3 py-1 bg-primary-extraLight text-primary rounded-full border border-primary-light">
                             AI Powered
                         </span>
                     </h1>
-                    <p className="text-gray-500 mt-1">Detailed breakdown of {filename}</p>
+                    <p className="text-text-medium mt-1">Detailed breakdown of {filename}</p>
                 </div>
                 <div className="flex gap-3">
                     <button
                         onClick={handlePrint}
-                        className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors shadow-sm print:hidden"
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-text-medium hover:bg-bg-gray hover:text-text-dark transition-colors shadow-sm print:hidden font-medium"
                     >
                         <Printer className="w-4 h-4" /> Print
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 print:hidden">
+                    {/* Share button placeholder functionality */}
+                    <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 print:hidden font-medium">
                         <Share2 className="w-4 h-4" /> Share
                     </button>
                 </div>
@@ -51,15 +52,15 @@ const ResultsDashboard = ({ results, onReset }) => {
             {/* Summary Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Health Score Card */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 flex items-center justify-between relative overflow-hidden group hover:shadow-xl transition-shadow duration-300 animate-slide-up">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-transparent rounded-bl-full opacity-50 pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
+                <div className="card p-8 flex items-center justify-between relative overflow-hidden group animate-slide-up">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-light to-transparent rounded-bl-full opacity-50 pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
 
                     <div className="relative z-10">
-                        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Overall Health Score</h3>
+                        <h3 className="text-sm font-semibold text-text-light uppercase tracking-wider mb-2">Overall Health Score</h3>
                         <div className={`text-5xl font-extrabold ${getScoreColor(health_score)} drop-shadow-sm`}>
-                            {health_score}<span className="text-2xl text-gray-300">/100</span>
+                            {health_score}<span className="text-2xl text-text-light">/100</span>
                         </div>
-                        <p className="text-sm text-gray-500 mt-3 font-medium flex items-center gap-1">
+                        <p className="text-sm text-text-medium mt-3 font-medium flex items-center gap-1">
                             <Activity className="w-4 h-4" /> Based on {summary.total_tests} metrics
                         </p>
                     </div>
@@ -84,29 +85,29 @@ const ResultsDashboard = ({ results, onReset }) => {
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
                             {health_score >= 80 ? (
-                                <CheckCircle className="w-8 h-8 text-green-500" />
+                                <CheckCircle className="w-8 h-8 text-success" />
                             ) : (
-                                <AlertTriangle className="w-8 h-8 text-yellow-500" />
+                                <AlertTriangle className="w-8 h-8 text-alert" />
                             )}
                         </div>
                     </div>
                 </div>
 
                 {/* Stats Summary */}
-                <div className="col-span-1 md:col-span-2 bg-white rounded-2xl shadow-lg border border-gray-100 p-8 flex flex-col justify-center animate-slide-up-delay-1">
-                    <h3 className="text-lg font-bold text-gray-900 mb-6">Quick Summary</h3>
+                <div className="col-span-1 md:col-span-2 card p-8 flex flex-col justify-center animate-slide-up-delay-1">
+                    <h3 className="text-lg font-bold text-text-dark mb-6">Quick Summary</h3>
                     <div className="grid grid-cols-3 gap-6 text-center">
-                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 hover:bg-gray-100 transition-colors cursor-default">
-                            <p className="text-3xl font-extrabold text-gray-900 mb-1">{summary.total_tests}</p>
-                            <p className="text-xs text-gray-500 font-bold uppercase tracking-wide">Total Tests</p>
+                        <div className="p-4 bg-bg-gray rounded-xl border border-gray-100 hover:bg-gray-100 transition-colors cursor-default">
+                            <p className="text-3xl font-extrabold text-text-dark mb-1">{summary.total_tests}</p>
+                            <p className="text-xs text-text-medium font-bold uppercase tracking-wide">Total Tests</p>
                         </div>
-                        <div className="p-4 bg-green-50 rounded-xl border border-green-100 hover:bg-green-100 transition-colors cursor-default">
-                            <p className="text-3xl font-extrabold text-green-600 mb-1">{summary.normal}</p>
-                            <p className="text-xs text-green-700 font-bold uppercase tracking-wide">Normal Range</p>
+                        <div className="p-4 bg-success-light/50 rounded-xl border border-success-light hover:bg-success-light transition-colors cursor-default">
+                            <p className="text-3xl font-extrabold text-success mb-1">{summary.normal}</p>
+                            <p className="text-xs text-success font-bold uppercase tracking-wide">Normal Range</p>
                         </div>
-                        <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 hover:bg-amber-100 transition-colors cursor-default">
-                            <p className="text-3xl font-extrabold text-amber-600 mb-1">{summary.abnormal}</p>
-                            <p className="text-xs text-amber-700 font-bold uppercase tracking-wide">Action Needed</p>
+                        <div className="p-4 bg-alert-light/50 rounded-xl border border-alert-light hover:bg-alert-light transition-colors cursor-default">
+                            <p className="text-3xl font-extrabold text-alert mb-1">{summary.abnormal}</p>
+                            <p className="text-xs text-alert font-bold uppercase tracking-wide">Action Needed</p>
                         </div>
                     </div>
                 </div>
@@ -120,10 +121,10 @@ const ResultsDashboard = ({ results, onReset }) => {
             {/* Detailed Parameters Grid */}
             <div className="animate-slide-up-delay-3">
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 border-l-4 border-primary pl-4">
+                    <h2 className="text-2xl font-bold text-text-dark border-l-4 border-primary pl-4">
                         Detailed Analysis
                     </h2>
-                    <div className="text-sm font-medium text-gray-400">
+                    <div className="text-sm font-medium text-text-light">
                         {parameters.length} Parameters Analyzed
                     </div>
                 </div>
@@ -140,7 +141,7 @@ const ResultsDashboard = ({ results, onReset }) => {
             <div className="flex justify-center pt-8 animate-fade-in">
                 <button
                     onClick={onReset}
-                    className="group flex items-center gap-3 px-8 py-4 bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg"
+                    className="btn-secondary flex items-center gap-2 group border-2"
                 >
                     Upload Another Report
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

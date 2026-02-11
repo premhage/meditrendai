@@ -6,7 +6,7 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
     const [dragActive, setDragActive] = useState(false);
     const [files, setFiles] = useState([]);
     const [uploading, setUploading] = useState(false);
-    const [mode, setMode] = useState('single'); // 'single' or 'trends'
+    const [mode, setMode] = useState('single');
     const inputRef = useRef(null);
 
     const handleDrag = (e) => {
@@ -114,36 +114,35 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
 
     return (
         <div className="w-full max-w-xl mx-auto space-y-8 animate-fade-in">
-
             {/* Mode Switcher */}
-            <div className="flex p-1.5 bg-gray-100 rounded-xl shadow-inner">
+            <div className="flex bg-gray-100 p-1 rounded-xl">
                 <button
                     onClick={() => { setMode('single'); setFiles([]); setError(null); }}
-                    className={`flex-1 py-3 text-sm font-semibold rounded-lg transition-all duration-300 transform 
+                    className={`flex-1 py-3 text-sm font-semibold rounded-lg transition-all duration-300
                     ${mode === 'single'
-                            ? 'bg-white shadow-md text-primary scale-[1.02]'
-                            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'}`}
+                            ? 'bg-white shadow-sm text-primary'
+                            : 'text-text-medium hover:text-text-dark'}`}
                 >
-                    Single Report Analysis
+                    Single Report
                 </button>
                 <button
                     onClick={() => { setMode('trends'); setFiles([]); setError(null); }}
-                    className={`flex-1 py-3 text-sm font-semibold rounded-lg transition-all duration-300 transform flex items-center justify-center gap-2
+                    className={`flex-1 py-3 text-sm font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2
                     ${mode === 'trends'
-                            ? 'bg-white shadow-md text-primary scale-[1.02]'
-                            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'}`}
+                            ? 'bg-white shadow-sm text-primary'
+                            : 'text-text-medium hover:text-text-dark'}`}
                 >
-                    <TrendingUp className="w-4 h-4" /> Track Health Trends
+                    <TrendingUp className="w-4 h-4" /> Trend Tracking
                 </button>
             </div>
 
-            {/* Drop Zone */}
+            {/* Docmed Style Upload Zone */}
             <div
-                className={`relative border-2 border-dashed rounded-2xl p-10 transition-all duration-300 ease-out text-center group cursor-pointer overflow-hidden
+                className={`
+                    relative border-2 border-dashed rounded-xl p-10 transition-all duration-300 text-center cursor-pointer
                     ${dragActive
-                        ? 'border-primary bg-primary/5 scale-[1.01] shadow-lg ring-4 ring-primary/10'
-                        : 'border-gray-200 hover:border-primary/50 hover:bg-gray-50 hover:scale-[1.01] hover:shadow-md'}
-                    ${files.length > 0 ? 'bg-white border-solid border-gray-200' : ''}
+                        ? 'border-primary bg-primary-extraLight scale-[1.01]'
+                        : 'border-blue-200 bg-primary-light/30 hover:bg-primary-extraLight hover:border-primary'}
                 `}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -161,43 +160,36 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
                 />
 
                 {files.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-8">
-                        <div className="w-20 h-20 bg-blue-50 text-primary rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                            <Upload className="w-10 h-10" />
+                    <div className="flex flex-col items-center justify-center py-6">
+                        <div className="w-16 h-16 bg-white text-primary rounded-full flex items-center justify-center mb-6 shadow-sm border border-blue-100">
+                            <Upload className="w-8 h-8" />
                         </div>
-                        <p className="text-xl font-bold text-gray-800 mb-2">
-                            {mode === 'single' ? 'Upload Your Report' : 'Upload Reports to Compare'}
+                        <p className="text-xl font-bold text-text-dark mb-2">
+                            Drop your medical report here
                         </p>
-                        <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto leading-relaxed">
-                            Drag & drop your PDF or Image here, or click to browse files
+                        <p className="text-sm text-text-medium mb-6">
+                            or click to browse
                         </p>
-                        <div className="flex gap-2 text-xs font-medium text-gray-400 uppercase tracking-wide">
-                            <span className="bg-gray-100 px-2 py-1 rounded">PDF</span>
-                            <span className="bg-gray-100 px-2 py-1 rounded">JPG</span>
-                            <span className="bg-gray-100 px-2 py-1 rounded">PNG</span>
+                        <div className="inline-flex gap-2 text-xs font-semibold text-primary bg-white px-3 py-1 rounded-full border border-blue-100">
+                            PDF, JPG, PNG (Max 10MB)
                         </div>
                     </div>
                 ) : (
                     <div className="space-y-3 cursor-default" onClick={(e) => e.stopPropagation()}>
                         {files.map((file, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm animate-slide-up">
+                            <div key={idx} className="flex items-center justify-between p-4 bg-primary-extraLight rounded-lg border border-blue-200 animate-slide-up">
                                 <div className="flex items-center gap-4 text-left">
-                                    <div className="p-3 bg-white rounded-lg border border-gray-100 shadow-sm">
-                                        {file.type === 'application/pdf' ? (
-                                            <FileText className="w-6 h-6 text-red-500" />
-                                        ) : (
-                                            <ImageIcon className="w-6 h-6 text-blue-500" />
-                                        )}
+                                    <div className="p-3 bg-white rounded-lg border border-blue-100 text-primary">
+                                        {file.type === 'application/pdf' ? <FileText className="w-6 h-6" /> : <ImageIcon className="w-6 h-6" />}
                                     </div>
                                     <div className="overflow-hidden">
-                                        <p className="text-sm font-bold text-gray-900 truncate max-w-[200px]">{file.name}</p>
-                                        <p className="text-xs text-gray-500 font-medium">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                        <p className="text-sm font-bold text-text-dark truncate max-w-[200px]">{file.name}</p>
+                                        <p className="text-xs text-text-medium">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => removeFile(idx)}
-                                    className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-400 hover:text-red-500"
-                                    disabled={uploading}
+                                    className="p-2 hover:bg-white rounded-full transition-colors text-text-medium hover:text-warning"
                                 >
                                     <X className="w-5 h-5" />
                                 </button>
@@ -207,9 +199,9 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
                         {mode === 'trends' && (
                             <button
                                 onClick={() => inputRef.current?.click()}
-                                className="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-primary hover:border-primary/50 flex items-center justify-center gap-2 text-sm font-semibold transition-all"
+                                className="w-full py-3 bg-white border border-dashed border-primary/30 rounded-lg text-primary hover:bg-primary-extraLight font-semibold text-sm transition-all flex items-center justify-center gap-2"
                             >
-                                <Plus className="w-5 h-5" /> Add another report
+                                <Plus className="w-4 h-4" /> Add another
                             </button>
                         )}
                     </div>
@@ -221,35 +213,27 @@ const UploadReport = ({ onUploadSuccess, onTrendAnalysisSuccess, setLoading, set
                 <button
                     onClick={handleUpload}
                     disabled={files.length === 0 || uploading || (mode === 'trends' && files.length < 2)}
-                    className={`
-                        w-full py-4 px-8 rounded-xl font-bold text-lg text-white transition-all duration-300 shadow-lg
+                    className={`btn-primary w-full text-lg shadow-lg
                         ${files.length === 0 || uploading || (mode === 'trends' && files.length < 2)
-                            ? 'bg-gray-300 cursor-not-allowed shadow-none'
-                            : 'bg-gradient-to-r from-primary to-blue-600 hover:to-blue-700 hover:shadow-xl hover:-translate-y-1 active:scale-[0.98] ring-4 ring-primary/20'}
+                            ? 'opacity-50 cursor-not-allowed shadow-none'
+                            : ''}
                     `}
                 >
                     {uploading ? (
                         <div className="flex items-center justify-center gap-3">
                             <Loader2 className="w-6 h-6 animate-spin" />
-                            <span>Processing Intelligence...</span>
+                            <span>Processing...</span>
                         </div>
                     ) : (
                         <div className="flex items-center justify-center gap-2">
                             {mode === 'single' ? 'Analyze Report' : 'Compare Reports'}
-                            {!uploading && <CheckCircle className="w-5 h-5 opacity-50" />}
                         </div>
                     )}
                 </button>
 
                 {mode === 'trends' && files.length === 1 && (
-                    <p className="text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1 rounded-full animate-pulse-slow">
+                    <p className="text-xs font-semibold text-alert bg-alert-light px-3 py-1 rounded-full">
                         * Please upload at least 2 reports to analyze trends.
-                    </p>
-                )}
-
-                {uploading && (
-                    <p className="text-center text-sm text-gray-500 flex items-center gap-2 animate-pulse-slow">
-                        <Loader2 className="w-4 h-4 animate-spin" /> AI is analyzing your health data securely...
                     </p>
                 )}
             </div>
